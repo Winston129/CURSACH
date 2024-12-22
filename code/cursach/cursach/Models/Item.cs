@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace cursach.Models;
 
@@ -7,12 +8,16 @@ public partial class Item
 {
     public int ItemId { get; set; }
 
+    [Required(ErrorMessage = "Name required.")]
     public string? ItemName { get; set; }
 
+    [Required(ErrorMessage = "Type Name required.")]
     public int? ItemTypeId { get; set; }
 
+    [Required(ErrorMessage = "Price required.")]
     public decimal? Price { get; set; }
 
+    [Required(ErrorMessage = "Status required.")]
     public string? Status { get; set; }
 
     public int? AvailableId { get; set; }

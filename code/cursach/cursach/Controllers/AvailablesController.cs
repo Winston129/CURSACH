@@ -10,28 +10,22 @@ using cursach.Models;
 
 namespace cursach.Controllers
 {
-    public class ClientsController : Controller
+    public class AvailablesController : Controller
     {
         private readonly CursachClientAddItemContext _context;
 
-        public ClientsController(CursachClientAddItemContext context)
+        public AvailablesController(CursachClientAddItemContext context)
         {
             _context = context;
         }
 
-        // GET: Clients
+        // GET: Availables
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Clients.ToListAsync());
+            return View(await _context.Availables.ToListAsync());
         }
 
-        public async Task<IActionResult> SelectName()
-        {
-            return View();
-        }
-
-        // GET: Clients/Details/5
-        [HttpGet("Clients/Details/{id}")]
+        // GET: Availables/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,58 +33,39 @@ namespace cursach.Controllers
                 return NotFound();
             }
 
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.ClientId == id);
-            if (client == null)
+            var available = await _context.Availables
+                .FirstOrDefaultAsync(m => m.AvailableId == id);
+            if (available == null)
             {
                 return NotFound();
             }
 
-            return View(client);
+            return View(available);
         }
 
-        // GET: Clients/Details?
-        [HttpGet("Clients/Details")]
-        public async Task<IActionResult> Details(string lastName)
-        {
-            if (string.IsNullOrWhiteSpace(lastName))
-            {
-                return NotFound("itemName is required.");
-            }
-
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.LastName == lastName);
-            if (client == null)
-            {
-                return NotFound();
-            }
-
-            return View(client);
-        }
-
-        // GET: Clients/Create
+        // GET: Availables/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Clients/Create
+        // POST: Availables/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClientId,FirstName,LastName,MiddleName,PassportData")] Client client)
+        public async Task<IActionResult> Create([Bind("AvailableId,DateListed")] Available available)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(client);
+                _context.Add(available);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return View(available);
         }
 
-        // GET: Clients/Edit/5
+        // GET: Availables/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -98,22 +73,22 @@ namespace cursach.Controllers
                 return NotFound();
             }
 
-            var client = await _context.Clients.FindAsync(id);
-            if (client == null)
+            var available = await _context.Availables.FindAsync(id);
+            if (available == null)
             {
                 return NotFound();
             }
-            return View(client);
+            return View(available);
         }
 
-        // POST: Clients/Edit/5
+        // POST: Availables/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ClientId,FirstName,LastName,MiddleName,PassportData")] Client client)
+        public async Task<IActionResult> Edit(int id, [Bind("AvailableId,DateListed")] Available available)
         {
-            if (id != client.ClientId)
+            if (id != available.AvailableId)
             {
                 return NotFound();
             }
@@ -122,12 +97,12 @@ namespace cursach.Controllers
             {
                 try
                 {
-                    _context.Update(client);
+                    _context.Update(available);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClientExists(client.ClientId))
+                    if (!AvailableExists(available.AvailableId))
                     {
                         return NotFound();
                     }
@@ -138,10 +113,10 @@ namespace cursach.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(client);
+            return View(available);
         }
 
-        // GET: Clients/Delete/5
+        // GET: Availables/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -149,34 +124,34 @@ namespace cursach.Controllers
                 return NotFound();
             }
 
-            var client = await _context.Clients
-                .FirstOrDefaultAsync(m => m.ClientId == id);
-            if (client == null)
+            var available = await _context.Availables
+                .FirstOrDefaultAsync(m => m.AvailableId == id);
+            if (available == null)
             {
                 return NotFound();
             }
 
-            return View(client);
+            return View(available);
         }
 
-        // POST: Clients/Delete/5
+        // POST: Availables/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var client = await _context.Clients.FindAsync(id);
-            if (client != null)
+            var available = await _context.Availables.FindAsync(id);
+            if (available != null)
             {
-                _context.Clients.Remove(client);
+                _context.Availables.Remove(available);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClientExists(int id)
+        private bool AvailableExists(int id)
         {
-            return _context.Clients.Any(e => e.ClientId == id);
+            return _context.Availables.Any(e => e.AvailableId == id);
         }
     }
 }

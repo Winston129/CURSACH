@@ -1,0 +1,13 @@
+﻿@{
+    ViewData["Title"] = "SelectName";
+}
+
+<h1>Client Item by Last Name</h1>
+
+<form asp-action="Details" method="get">
+    <div class="form-group">
+        <label for="lastName">Enter Last Name:</label>
+        <input type="text" id="lastName" name="lastName" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>

@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewData["Title"] = "SelectName";
+}
+
+<h1>Search Reserved by Reserved Date</h1>
+
+<form asp-action="Details" method="get">
+    <div class="form-group">
+        <label for="reservedDate">Enter Item Name:</label>
+        <input type="date" id="reservedDate" name="reservedDate" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
