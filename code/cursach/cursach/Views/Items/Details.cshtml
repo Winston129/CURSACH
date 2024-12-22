@@ -1,0 +1,130 @@
+﻿@model cursach.Models.Item
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<link rel="stylesheet" href="~/css/details.css" asp-append-version="true" />
+<h1>Details</h1>
+
+<div>
+    <h4>Item</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ItemName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ItemName)
+        </dd>
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ItemType)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ItemType.NameType)
+        </dd>
+
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+    </dl>
+        @if (Model.Available != null)
+        {
+        <dl class="row">
+            <h5>Available</h5>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Available.DateListed)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Available.DateListed)
+            </dd>
+        </dl>
+        }
+        else if (Model.Reserved != null)
+        {
+        <dl class="row">
+            <h5>Reserved</h5>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Reserved.ReservedDate)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Reserved.ReservedDate)
+            </dd>
+
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Reserved.ExpirationDate)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Reserved.ExpirationDate)
+            </dd>
+            
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Reserved.InterestRate)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Reserved.InterestRate)
+            </dd>
+        </dl>
+        }
+        else if (Model.Sold != null)
+        {
+        <dl class="row">
+            <h5>Sold</h5>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Sold.SaleDate)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Sold.SaleDate)
+            </dd>
+        </dl>
+        }
+
+        @if (Model.Client != null)
+        {
+        <dl class="row">
+            <h5>Client</h5>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Client.FirstName)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Client.FirstName)
+            </dd>
+        
+            <dt class = "col-sm-2">
+                 @Html.DisplayNameFor(model => model.Client.LastName)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Client.LastName)
+            </dd>
+        
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Client.MiddleName)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Client.MiddleName)
+            </dd>
+        
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Client.PassportData)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Client.PassportData)
+            </dd>
+        </dl>
+        }
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.ItemId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

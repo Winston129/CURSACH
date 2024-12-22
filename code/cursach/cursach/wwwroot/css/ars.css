@@ -1,0 +1,11 @@
+﻿body {
+}
+
+.ARS {
+    display: flex;
+    flex-direction: column;
+}
+
+.Reserved, .Sold, .Client {
+    display: none;
+}
