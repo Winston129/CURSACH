@@ -20,9 +20,24 @@ namespace cursach.Controllers
         }
 
         // GET: Solds
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 5)
         {
-            return View(await _context.Solds.ToListAsync());
+            var query = _context.Solds.AsQueryable();
+
+            // Общее количество элементов
+            int totalItems = await query.CountAsync();
+
+            // Получаем данные для текущей страницы
+            var solds = await query
+                .Skip((pageNumber - 1) * pageSize) // Пропускаем элементы для предыдущих страниц
+                .Take(pageSize) // Берем только нужное количество элементов
+                .ToListAsync();
+
+            // Передаем в представление информацию о текущей и общей странице
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.CurrentPage = pageNumber;
+
+            return View(solds);
         }
 
         // GET: Solds/Details/5

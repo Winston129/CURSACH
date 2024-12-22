@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using cursach.Data;
 using cursach.Models;
+using System.Drawing.Printing;
 
 namespace cursach.Controllers
 {
@@ -20,10 +21,26 @@ namespace cursach.Controllers
         }
 
         // GET: Items
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 5)
         {
-            var cursachClientAddItemContext = _context.Items.Include(i => i.Available).Include(i => i.Client).Include(i => i.ItemType).Include(i => i.Reserved).Include(i => i.Sold);
-            return View(await cursachClientAddItemContext.ToListAsync());
+            var query = _context.Items
+                .Include(i => i.Available)
+                .Include(i => i.Client)
+                .Include(i => i.ItemType)
+                .Include(i => i.Reserved)
+                .Include(i => i.Sold)
+                .AsQueryable();
+
+            int totalItems = await query.CountAsync();
+            var items = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+            .ToListAsync();
+
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.CurrentPage = pageNumber;
+
+            return View(items);
         }
 
         public async Task<IActionResult> SelectName()

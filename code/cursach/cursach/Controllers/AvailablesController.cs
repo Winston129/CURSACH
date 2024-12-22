@@ -20,9 +20,24 @@ namespace cursach.Controllers
         }
 
         // GET: Availables
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 5)
         {
-            return View(await _context.Availables.ToListAsync());
+            var query = _context.Availables.AsQueryable();
+
+            // Общее количество элементов
+            int totalItems = await query.CountAsync();
+
+            // Получаем данные для текущей страницы
+            var availables = await query
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            // Передаём данные в представление
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.CurrentPage = pageNumber;
+
+            return View(availables);
         }
 
         // GET: Availables/Details/5

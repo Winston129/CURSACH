@@ -12,66 +12,47 @@
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ItemType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Available)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Reserved)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Sold)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Client)
-            </th>
+            <th>@Html.DisplayNameFor(model => model.First().ItemName)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Price)</th>
+            <th>@Html.DisplayNameFor(model => model.First().ItemType)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Available)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Reserved)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Sold)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Status)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Client)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ItemType.NameType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Available.DateListed)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reserved.ReservedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sold.SaleDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Client.LastName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ItemId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ItemId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ItemId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
+                <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                <td>@Html.DisplayFor(modelItem => item.ItemType.NameType)</td>
+                <td>@Html.DisplayFor(modelItem => item.Available.DateListed)</td>
+                <td>@Html.DisplayFor(modelItem => item.Reserved.ReservedDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Sold.SaleDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                <td>@Html.DisplayFor(modelItem => item.Client.LastName)</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ItemId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ItemId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ItemId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<!-- Пагинация -->
+<div class="d-flex justify-content-between">
+    @if (ViewBag.CurrentPage > 1)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(ViewBag.CurrentPage - 1)" class="btn btn-primary">Назад</a>
+    }
+    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+    {
+        <a asp-action="Index" asp-route-pageNumber="@(ViewBag.CurrentPage + 1)" class="btn btn-primary">Вперед</a>
+    }
+</div>
