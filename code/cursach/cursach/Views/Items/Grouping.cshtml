@@ -1,0 +1,65 @@
+﻿@{
+    ViewData["Title"] = "Grouping";
+    var groupedItems = ViewData["GroupedItems"] as IEnumerable<IGrouping<DateOnly?, cursach.Models.Item>>;
+}
+
+<h1>Grouping</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Тип</th>
+            <th>Дата добавления</th>
+            <th>Дата резервирования</th>
+            <th>Дата продажи</th>
+            <th>Статус</th>
+            <th>Клиент</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in groupedItems)
+        {
+            <tr>
+                <td colspan="9">
+                    <strong>Группа по дате залога: @group.Key?.ToString("dd.MM.yyyy")</strong>
+                </td>
+            </tr>
+            @foreach (var item in group)
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>@item.Price</td>
+                    <td>@item.ItemType?.NameType</td>
+                    <td>@item.Available?.DateListed?.ToString("dd.MM.yyyy")</td>
+                    <td>@item.Reserved?.ReservedDate?.ToString("dd.MM.yyyy")</td>
+                    <td>@item.Sold?.SaleDate?.ToString("dd.MM.yyyy")</td>
+                    <td>@item.Status</td>
+                    <td>@item.Client?.LastName</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ItemId">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ItemId">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ItemId">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<!-- Пагинация -->
+<div class="d-flex justify-content-between">
+    @if (ViewBag.CurrentPage > 1)
+    {
+        <a asp-action="Grouping" asp-route-pageNumber="@(ViewBag.CurrentPage - 1)" class="btn btn-primary">Назад</a>
+    }
+    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+    {
+        <a asp-action="Grouping" asp-route-pageNumber="@(ViewBag.CurrentPage + 1)" class="btn btn-primary">Вперед</a>
+    }
+</div>

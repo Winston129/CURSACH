@@ -63,8 +63,8 @@ values
 insert into Item(ItemName, ItemTypeID, Price, Status, AvailableID, ReservedID, SoldID, ClientID)
 values
 ('The Hero with a Thousand Faces', 4, 333.3, 'Available', 4, null, null, null),
-('IPhon21', 1, 9999.99, 'Reserved', null, null, 3, 12),
-('Chateau Mouton Rothschild', 6, 200.2, 'Sold', null, 2, null, 14);
+('IPhon21', 1, 9999.99, 'Reserved', null, 3, null, 12),
+('Chateau Mouton Rothschild', 6, 200.2, 'Sold', null, null, 2, 14);
 
 
 select * from Available;

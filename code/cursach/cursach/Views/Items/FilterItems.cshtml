@@ -1,0 +1,31 @@
+﻿@model List<FilteredItemViewModel>  // Используем правильную модель
+
+<h1>Filtered Items</h1>
+@if (Model != null && Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Client Name</th>
+                <th>Sold Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)  // Используем Model, а не filteredItems
+            {
+                <tr>
+                    <td>@item.ItemName</td>
+                    <td>@item.Price</td>
+                    <td>@item.ClientName</td>
+                    <td>@item.SoldDate?.ToString("dd.MM.yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No items found matching your search criteria.</p>
+}

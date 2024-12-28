@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "SelectFilterClient";
+}
+
+<h1>Select ExpirationDate</h1>
+
+<form asp-action="FilterClient" method="get">
+    <div class="form-group">
+        <label for="ReservedId" class="control-label">Select Expiration Date:</label>
+        <select id="ReservedId" name="ReservedId" class="form-control">
+            <option value="">-- Не выбрано --</option>
+            @foreach (var item in ViewData["Reserved"] as IEnumerable<SelectListItem>)
+            {
+                    <option value="@item.Value">@item.Text</option>
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>

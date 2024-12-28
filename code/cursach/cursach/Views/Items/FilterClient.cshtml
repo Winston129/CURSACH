@@ -1,0 +1,54 @@
+﻿@{
+    var groupedItems = ViewData["GroupedItems"] as List<GroupedItemViewModel>;
+}
+
+<h1>Items Grouped by Price</h1>
+
+@if (groupedItems != null && groupedItems.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Price</th>
+                <th>Item Name</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>MiddleName</th>
+                <th>PassportData</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in groupedItems)
+{
+    <tr>
+        <td colspan="5" class="text-center"><strong>Price: @group.Price</strong></td>
+    </tr>
+    @foreach (var item in group.Items)
+    {
+        <tr>
+            <td>
+                @if (item.Reserved != null)
+                {
+                    var finalPrice = item.Price + item.Reserved.InterestRate;
+                    @finalPrice
+                }
+                else
+                {
+                    @item.Price
+                }
+            </td>
+            <td>@item.ItemName</td>
+            <td>@item.Client.FirstName</td>
+            <td>@item.Client.LastName</td>
+            <td>@item.Client.MiddleName</td>
+            <td>@item.Client.PassportData</td>
+        </tr>
+    }
+}
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No items available in the selected group.</p>
+}

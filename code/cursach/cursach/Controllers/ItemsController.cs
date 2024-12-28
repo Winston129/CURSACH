@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+//using cursach.ListObject;
 using cursach.Data;
 using cursach.Models;
 using System.Drawing.Printing;
@@ -280,5 +281,138 @@ namespace cursach.Controllers
         {
             return _context.Items.Any(e => e.ItemId == id);
         }
+
+        // GET: Items/Grouping
+        public async Task<IActionResult> Grouping(int pageNumber = 1, int pageSize = 5)
+        {
+            // Получаем все элементы с необходимыми связями
+            var items = await _context.Items
+                .Include(i => i.ItemType)
+                .Include(i => i.Available)
+                .Include(i => i.Reserved)
+                .Include(i => i.Sold)
+                .Include(i => i.Client)
+                .Where(i => i.Status == "Reserved")
+                .ToListAsync();
+
+            // Группируем по дате резервирования
+            var groupedItems = items
+                .GroupBy(i => i.Reserved.ReservedDate)
+                .ToList();
+
+            // Передача данных в представление через ViewData
+            ViewData["GroupedItems"] = groupedItems;
+
+            // Пагинация
+            int totalItems = items.Count;
+            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+            ViewBag.CurrentPage = pageNumber;
+
+            return View();
+        }
+
+        //FilterClient
+        public async Task<IActionResult> SelectFilterClient()
+        {
+            var today = DateOnly.FromDateTime(DateTime.Now);
+
+            var reservedList = await _context.Reserveds
+                .Where(r => r.ExpirationDate.HasValue && r.ExpirationDate.Value < today)
+                .Select(r => new SelectListItem
+                {
+                    Value = r.ReservedId.ToString(),
+                    Text = r.ExpirationDate.HasValue
+                        ? r.ExpirationDate.Value.ToString("dd.MM.yyyy")
+                        : ""
+                })
+                .ToListAsync();
+
+            // Передаем список в ViewData
+            ViewData["Reserved"] = reservedList;
+
+            return View();
+        }
+
+
+        // GET: Items/Grouping
+        public async Task<IActionResult> FilterClient(int? ReservedId)
+        {
+            var itemsQuery = _context.Items
+                .Include(i => i.ItemType)
+                .Include(i => i.Available)
+                .Include(i => i.Reserved)
+                .Include(i => i.Sold)
+                .Include(i => i.Client)
+                .Where(i => i.Status == "Reserved");
+
+            if (ReservedId.HasValue)
+            {
+                itemsQuery = itemsQuery.Where(i => i.ReservedId == ReservedId.Value);
+            }
+
+            // Получаем все элементы с необходимыми данными
+            var items = await itemsQuery.ToListAsync();
+
+            // Группируем элементы по цене
+            var groupedItems = items
+                .GroupBy(i => i.Price)
+                .Select(g => new GroupedItemViewModel
+                {
+                    Price = g.Key,
+                    Items = g.ToList()
+                })
+                .ToList();
+
+            // Передаем данные в ViewData
+            ViewData["GroupedItems"] = groupedItems;
+
+            return View();
+        }
+
+        //FilterItems
+        public async Task<IActionResult> SelectFilterItems()
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> FilterItems(string itemName)
+        {
+            var itemsQuery = _context.Items
+                .Include(i => i.ItemType)
+                .Include(i => i.Available)
+                .Include(i => i.Reserved)
+                .Include(i => i.Sold)
+                .Include(i => i.Client)
+                .Where(i => i.Status == "Sold")
+                .Where(i => EF.Functions.Like(i.ItemName, $"%{itemName}%"));  // Здесь используем LIKE
+
+            var items = await itemsQuery.ToListAsync();
+
+            if (items.Any())
+            {
+                Console.WriteLine($"Found {items.Count} items matching the search criteria.");
+            }
+            else
+            {
+                Console.WriteLine("No items found matching the search criteria.");
+            }
+
+            // Создаем модель для отображения
+            var viewModel = items.Select(i => new FilteredItemViewModel
+            {
+                ItemId = i.ItemId,
+                ItemName = i.ItemName,
+                Price = i.Price,
+                ClientName = $"{i.Client?.FirstName} {i.Client?.LastName}",
+                SoldDate = i.Sold != null ? (i.Sold.SaleDate.HasValue ? i.Sold.SaleDate.Value.ToDateTime(new TimeOnly(0, 0)) : (DateTime?)null) : (DateTime?)null
+            }).ToList();
+
+            return View(viewModel);  // Передаем viewModel напрямую
+        }
+
+
+
+
+
     }
 }
